@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LiveBot</title>
+	<style>
+		/* Tooltip container */
+		.tooltip {
+		  position: relative;
+		  display: inline-block;
+		  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+		}
+
+		/* Tooltip text */
+		.tooltip .tooltiptext {
+		  visibility: hidden;
+		  width: 550px;
+		  background-color: black;
+		  color: #fff;
+		  text-align: center;
+		  padding: 5px 0;
+		  border-radius: 6px;
+
+		  /* Position the tooltip text - see examples below! */
+		  position: absolute;
+		  z-index: 1;
+		}
+
+		/* Show the tooltip text when you mouse over the tooltip container */
+		.tooltip:hover .tooltiptext {
+		  visibility: visible;
+		}
+
+
+
+		/* The switch - the box around the slider */
+		.switch {
+			position: relative;
+			display: inline-block;
+			width: 60px;
+			height: 34px;
+		}
+
+		/* Hide default HTML checkbox */
+		.switch input {
+			opacity: 0;
+			width: 0;
+			height: 0;
+		}
+
+		/* The slider */
+		.slider {
+			position: absolute;
+			cursor: pointer;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background-color: rgb(255, 94, 94);
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		.slider:before {
+			position: absolute;
+			content: "";
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: white;
+			-webkit-transition: .4s;
+			transition: .4s;
+		}
+
+		input:checked + .slider {
+			background-color: #b121f3;
+		}
+
+		input:focus + .slider {
+			box-shadow: 0 0 1px #b121f3;
+		}
+
+		input:checked + .slider:before {
+			-webkit-transform: translateX(26px);
+			-ms-transform: translateX(26px);
+			transform: translateX(26px);
+		}
+
+			/* Rounded sliders */
+		.slider.round {
+			border-radius: 34px;
+		}
+
+		.slider.round:before {
+			border-radius: 50%;
+			background-image: url("/src/assets/youtube-logo.png");
+			background-size: 50px;
+			background-position: -12px;
+		}
+
+		input:checked + .slider.round:before {
+			background-image: url("/src/assets/twitch-logo.png");
+			background-size: 18px;
+			background-position: 4px;
+			background-repeat: no-repeat;
+		}
+
+		#twitch {
+			display: none;
+		}
+		</style>
+</head>
+<body>
+	<h1>LiveBot</h1>
+	<label class="switch">
+		<input id="switch" type="checkbox" onchange="toggle(this)">
+		<span class="slider round"></span>
+	</label>
+
+	<br><br><br>
+
+	<div id="youtube">
+		<a href="/yt/auth"><button>Authorize</button></a>
+		<a href="/yt/find-active-chat"><button>Find Chat</button></a>
+		<a href="/yt/get-variable"><button>Get Variable</button></a>
+		<br><br>
+		<form action="/yt/start-raffle" method="post">
+			<label for="duration">Duration (Minutes): </label>
+			<input type="number" id="duration" name="duration" min="1" max="60" value="1" autofocus required><br>
+			<label for="enterMessage">Message to enter: </label>
+			<input type="text" id="enterMessage" name="enterMessage" value="!join" placeholder="!join" required><br>
+			<label for="subOnly">Subscribers only: </label>
+			<input type="hidden" name="subOnly" value="0">
+			<input type="checkbox" id="subOnly" name="subOnly" value="1">
+			<div class="tooltip">Info
+				<span class="tooltiptext">Only works when viewer's subscriptions are public, which are private by default. Setting the livestream to sub only chat would be easier.</span>
+			</div><br>
+			<label for="memberOnly">Members only: </label>
+			<input type="hidden" name="memberOnly" value="0">
+			<input type="checkbox" id="memberOnly" name="memberOnly" value="1"><br>
+			<label for="subPrivilege">Subscriber chance increase: </label>
+			<input type="number" id="subPrivilege" name="subPrivilege" min="1" max="10" value="3" required><br>
+			<label for="memberPrivilege">Member chance increase: </label>
+			<input type="number" id="memberPrivilege" name="memberPrivilege" min="1" max="10" value="1" required><br>
+			<label for="winnerAmount">Amount of Winners drawn: </label>
+			<input type="number" id="winnerAmount" name="winnerAmount" min="1" max="100" value="3" required><br>
+			<label for="duplicateWinners">Duplicate Winners: </label>
+			<input type="hidden" name="duplicateWinners" value="0">
+			<input type="checkbox" id="duplicateWinners" name="duplicateWinners" value="1" checked><br>
+			<input type="submit" value="Submit">
+			<input type="reset" value="Reset">
+		</form>
+	</div>
+
+	<div id="twitch">
+		<a href="/twitch/auth"><button>Authorize</button></a>
+		<br><br>
+		<form action='/twitch/start-raffle' method="post">
+			<label for="duration">Duration (Minutes): </label>
+			<input type="number" id="duration" name="duration" min="1" max="60" value="1" autofocus required><br>
+			<label for="enterMessage">Message to enter: </label>
+			<input type="text" id="enterMessage" name="enterMessage" value="!join" placeholder="!join" required><br>
+			<input type="submit" value="Submit">
+			<input type="reset" value="Reset">
+		</form>
+	</div>
+
+	<script>
+		const youtube = document.getElementById("youtube");
+		const twitch = document.getElementById("twitch");
+
+		function toggle(element) {
+			if (element.checked) {
+				youtube.style.display = "none";
+				twitch.style.display = "block"
+			} else {
+				twitch.style.display = "none";
+				youtube.style.display = "block"
+			}
+		}
+	</script>
+</body>
+</html>
