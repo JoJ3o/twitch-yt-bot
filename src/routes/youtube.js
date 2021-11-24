@@ -1,27 +1,27 @@
 const express = require('express');
-const youtubeService = require('../services/youtubeService');
+const youtubeRaffle = require('../services/youtubeRaffle');
 
 const router = express.Router();
 
 // Youtube routes
 router.get('/auth', (req, res) => {
-	youtubeService.getCode(res);
+	youtubeRaffle.getCode(res);
 });
 
 router.get('/callback', (req, res) => {
 	const {code} = req.query;
-	youtubeService.getTokensWithCode(code);
+	youtubeRaffle.getTokensWithCode(code);
 	res.redirect('/');
 });
 
 router.get('/find-active-chat', (req, res) => {
-	youtubeService.findActiveChat();
+	youtubeRaffle.findActiveChat();
 	res.redirect('/');
 });
 
 router.post('/start-raffle', (req, res) => {
 	console.log(req.body);
-	youtubeService.startRaffle(req.body);
+	youtubeRaffle.startRaffle(req.body);
 	res.redirect('/');
 })
 

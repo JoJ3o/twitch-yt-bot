@@ -166,6 +166,12 @@
 			<input type="number" id="duration" name="duration" min="1" max="60" value="1" autofocus required><br>
 			<label for="enterMessage">Message to enter: </label>
 			<input type="text" id="enterMessage" name="enterMessage" value="!join" placeholder="!join" required><br>
+			<label for="duplicateWinners">Duplicate Winners: </label>
+			<input type="hidden" name="duplicateWinners" value="0">
+			<input type="checkbox" id="duplicateWinners" name="duplicateWinners" value="1" checked><br>
+			<label for="announceWinners">Announce winners: </label>
+			<input type="hidden" name="announceWinners" value="0">
+			<input type="checkbox" id="announceWinners" name="announceWinners" value="1" checked><br>
 			<input type="submit" value="Submit">
 			<input type="reset" value="Reset">
 		</form>

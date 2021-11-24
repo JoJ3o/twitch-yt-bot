@@ -40,9 +40,9 @@ const scope = [
 
 const auth = new Oauth2(clientID, clientSecret, redirectURI);
 
-const youtubeService = {};
+const youtubeRaffle = {};
 
-youtubeService.getCode = response => {
+youtubeRaffle.getCode = response => {
 	const authUrl = auth.generateAuthUrl({
 		access_type: 'offline',
 		scope
@@ -50,12 +50,12 @@ youtubeService.getCode = response => {
 	response.redirect(authUrl);
 };
 
-youtubeService.getTokensWithCode = async code => {
+youtubeRaffle.getTokensWithCode = async code => {
 	const credentials = await auth.getToken(code);
 	youtubeService.authorize(credentials);
 };
 
-youtubeService.authorize = ({tokens}) => {
+youtubeRaffle.authorize = ({tokens}) => {
 	auth.setCredentials(tokens);
 	console.log('Succesfully set credentials');
 	console.log('tokens', tokens);
@@ -84,7 +84,7 @@ const checkTokens = async () => {
 }
 
 // API Calls
-youtubeService.findActiveChat = async() => {
+youtubeRaffle.findActiveChat = async() => {
 	const response = await youtube.liveBroadcasts.list({
 		auth,
 		part: 'snippet',
@@ -225,7 +225,7 @@ const stopTrackingChat = async(winnerAmount, duplicateWinners) => {
 	raffleUsersEntered = [];
 }
 
-youtubeService.startRaffle = async(data) => {
+youtubeRaffle.startRaffle = async(data) => {
 	console.log('Start');
 	startTrackingChat(data);
 	setTimeout(function() {stopTrackingChat(data.winnerAmount, data.duplicateWinners);}, (data.duration * (60/2) * 1000));
@@ -259,4 +259,4 @@ const pickWinner = (winnerAmount, duplicateWinners) => {
 
 checkTokens();
 
-module.exports = youtubeService;
+module.exports = youtubeRaffle;
