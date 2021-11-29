@@ -96,13 +96,13 @@
 
 		.slider.round:before {
 			border-radius: 50%;
-			background-image: url("/src/assets/youtube-logo.png");
+			background-image: url("./assets/youtube-logo.png");
 			background-size: 50px;
 			background-position: -12px;
 		}
 
 		input:checked + .slider.round:before {
-			background-image: url("/src/assets/twitch-logo.png");
+			background-image: url("./assets/twitch-logo.png");
 			background-size: 18px;
 			background-position: 4px;
 			background-repeat: no-repeat;
@@ -161,7 +161,7 @@
 	<div id="twitch">
 		<a href="/twitch/auth"><button>Authorize</button></a>
 		<br><br>
-		<form action='/twitch/start-raffle' method="post">
+		<form action='/twitch/start-raffle' method="post" id="twitchRaffleForm" name="twitchRaffleForm">
 			<label for="duration">Duration (Minutes): </label>
 			<input type="number" id="duration" name="duration" min="1" max="60" value="1" autofocus required><br>
 			<label for="enterMessage">Message to enter: </label>

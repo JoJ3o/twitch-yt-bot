@@ -1,15 +1,13 @@
 const tmi = require('tmi.js');
 
-let raffleUsersEntered = [];
-let client;
-
 const twitchRaffle = {};
 
 twitchRaffle.startRaffle = async(data) => {
-	console.log('Start Twitch Raffle');
 	console.log(data);
 
-	client = new tmi.Client({
+	console.log('Start Twitch Raffle');
+
+	const client = new tmi.Client({
 		options: {
 			debug: true
 		},
@@ -20,8 +18,16 @@ twitchRaffle.startRaffle = async(data) => {
 		channels: [ 'joj3o', 'osjesleben' ]
 	});
 
+	let raffleUsersEntered = [];
+	let noDefaults = false;
+
 	client.connect().then(() => {
-		client.say('#osjesleben', 'Raffle started! Type !join to enter')
+		if (Object.keys(data).length === 1) {
+			client.say('#osjesleben', 'Please enter default values in the Babble editor first');
+			noDefaults = true;
+		} else {
+			client.say('#osjesleben', 'Raffle started! Type !join to enter');
+		}
 	});
 
 
@@ -29,26 +35,29 @@ twitchRaffle.startRaffle = async(data) => {
 		// Ignore echoed messages.
 		if(self) return;
 		console.log(channel);
-		filterMessage(channel, tags, message, data.enterMessage);
+		filterMessage(channel, tags, message, data.enterMessage, raffleUsersEntered);
 	});
 
 	setTimeout(function() {
-		console.log(...raffleUsersEntered),
-		client.say('#osjesleben', 'The winners of the raffle are: ' + raffleUsersEntered.join(", ")),
-		client.disconnect(),
-		endRaffle()
-	}, (data.duration * (60/2) * 1000));
+		if (noDefaults == true) {
+			client.disconnect();
+			return;
+		}
+		console.log(raffleUsersEntered);
+		if (data.announceWinners.at(-1) == 1) {client.say('#osjesleben', 'The winners of the raffle are: ' + raffleUsersEntered.join(", "))};
+		client.disconnect();
+	}, (data.duration * (60/4) * 1000));
 }
 
-const filterMessage = async(channel, tags, message, enterMessage) => {
+const filterMessage = async(channel, tags, message, enterMessage, raffleUsersEntered) => {
 	if(message.toLowerCase() === enterMessage) {
 		raffleUsersEntered.push(tags.username);
 	}
 }
 
-const endRaffle = () => {
-	console.log(raffleUsersEntered);
-	raffleUsersEntered = [];
-}
+// const endRaffle = () => {
+// 	console.log(raffleUsersEntered);
+// 	raffleUsersEntered = [];
+// }
 
 module.exports = twitchRaffle;

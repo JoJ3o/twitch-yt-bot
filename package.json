@@ -4,14 +4,15 @@
     "description": "A Twitch and Youtube bot for experimenting and learning",
     "main": "src/index.js",
     "scripts": {
-		"start": "node src/index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node src/server.js",
+        "test": "node src/test.js"
     },
     "author": "JoJ3o",
     "license": "ISC",
     "dependencies": {
         "express": "^4.17.1",
         "googleapis": "^91.0.0",
+        "node-fetch": "^2.6.6",
         "tmi.js": "^1.8.5"
     }
 }
