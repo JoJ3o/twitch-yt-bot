@@ -1,4 +1,5 @@
 const express = require('express');
+const twitchAuth = require('../services/twitchAuth');
 const twitchRaffle = require('../services/twitchRaffle');
 
 const router = express.Router();
@@ -7,12 +8,13 @@ let raffleData = {duration: 1};
 
 // Twitch routes
 router.get('/auth', (req, res) => {
-	twitchRaffle.getCode(res);
+	twitchAuth.getCode(res);
 });
 
 router.get('/callback', (req, res) => {
-	const {code} = req.query;
-	twitchRaffle.getTokensWithCode(code);
+	const code = req.query;
+	console.log(code);
+	twitchAuth.getTokensWithCode(code);
 	res.redirect('/');
 });
 
